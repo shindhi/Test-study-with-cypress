@@ -1,19 +1,21 @@
 {
   "name": "aula00-tests-frontend-template",
+  "author": "diogonaka",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "npx browser-sync start -w --server ."
-  },
-  "keywords": [],
-  "author": "erickwendel",
-  "license": "ISC",
   "type": "module",
   "engines": {
-    "node": "v20.12.1"
+    "node": "20.12.1"
   },
+  "scripts": {
+    "cypress:web": "npx cypress open",
+    "cypress:handless": "npx cypress run --browser electron"
+  },
+  "keywords": [],
+  "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.29.3"
+    "browser-sync": "^2.29.3",
+    "cypress": "^13.7.2"
   }
 }
