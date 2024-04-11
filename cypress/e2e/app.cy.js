@@ -161,5 +161,74 @@ describe('Image Registration', () => {
       registerForm.elements.imageUrlInput().should('have.value', '')
     })
   })
+
+  describe('Submitting an image and updating the list', () => {
+    const inputs = {
+      title: 'BR Alien',
+      url: 'https://cdn.mos.cms.futurecdn.net/eM9EvWyDxXcnQTTyH8c8p5-1200-80.jpg'
+    }
+
+    after(() => {
+      cy.clearLocalStorage()
+    })
+
+    it(`Given I am on the image registration page`, () => {
+      cy.visit('/')
+    })
+
+    it(`Then I have entered "${inputs.title}" in the title field`, () => {
+      registerForm.typeTitle(inputs.title)
+    })
+
+    it(`Then I have entered "${inputs.url}" in the URL field`, () => {
+      registerForm.typeUrl(inputs.url)
+    })
+
+    it(`When I click the submit button`, () => {
+      registerForm.clickSubmit()
+    })
+
+    it(`And the list of registered images should be updated with the new item`, () => {
+      registerForm.elements.cardList().should((elements) => {
+        const lastElement = elements[elements.length - 1]
+        const src = lastElement.getAttribute('src')
+
+        assert.strictEqual(src, inputs.url)
+      })
+    })
+
+    it(`And the new item should be stored in the localStorage`, () => {
+      cy.getAllLocalStorage().should((ls) => {
+        const currentLs = ls[window.location.origin]
+        const elements = JSON.parse(Object.values(currentLs))
+        const lastElement = elements[elements.length - 1]
+
+        assert.deepStrictEqual(lastElement, {
+          title: inputs.title,
+          imageUrl: inputs.url
+        })
+      })
+    })
+
+    it(`Then The inputs should be cleared`, () => {
+      registerForm.elements.titleInput().should('have.value', '')
+      registerForm.elements.imageUrlInput().should('have.value', '')
+    })
+
+  })
     
+  describe('Refreshing the page after submitting an image clicking in the submit button', () => {
+    after(() => {
+      cy.clearLocalStorage()
+    })
+
+    it(`Given I am on the image registration page`)
+    
+    it(`Then I have submitted an image by clicking the submit button`)
+    
+    it(`When I refresh the page`)
+    
+    it(`Then I should still see the submitted image in the list of registered images`)
+    
+  })
 })
