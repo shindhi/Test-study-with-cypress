@@ -218,17 +218,43 @@ describe('Image Registration', () => {
   })
     
   describe('Refreshing the page after submitting an image clicking in the submit button', () => {
+    const inputs = {
+      title: 'Aliens',
+      url: 'https://cdn.mos.cms.futurecdn.net/eM9EvWyDxXcnQTTyH8c8p5-1200-80.jpg'
+    }
+
     after(() => {
       cy.clearLocalStorage()
     })
 
-    it(`Given I am on the image registration page`)
+    it(`Given I am on the image registration page`, () => {
+      cy.visit('/')
+    })
     
-    it(`Then I have submitted an image by clicking the submit button`)
+    it(`Then I have submitted an image by clicking the submit button`, () => {
+      registerForm.typeTitle(inputs.title)
+      registerForm.typeUrl(inputs.url)
+      registerForm.clickSubmit()
+      
+      cy.wait(300)
+    })
     
-    it(`When I refresh the page`)
+    it(`When I refresh the page`, () => {
+      cy.reload()
+    })
     
-    it(`Then I should still see the submitted image in the list of registered images`)
+    it(`Then I should still see the submitted image in the list of registered images`, () => {
+      cy.getAllLocalStorage().should((ls) => {
+        const currentLs = ls[window.location.origin]
+        const elements = JSON.parse(Object.values(currentLs))
+        const lastElement = elements[elements.length - 1]
+
+        assert.deepStrictEqual(lastElement, {
+          title: inputs.title,
+          imageUrl: inputs.url
+        })
+      })
+    })
     
   })
 })
